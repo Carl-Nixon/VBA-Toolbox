@@ -99,9 +99,9 @@ Function Chars_Are_In(first_string, second_string) As Boolean
     ' +-------------------------------------------------------------------------------------------+
     
     ' >>>> Set up variables <<<<
-    Dim Result As Boolean                                                                                               ' Holds if the values are valid or not
+    Dim result As Boolean                                                                                               ' Holds if the values are valid or not
     
-    Result = False                                                                                                      ' Set result to FALSE as a default
+    result = False                                                                                                      ' Set result to FALSE as a default
     
     ' >>>> Check safe to run <<<<
     If first_string = "" Or second_string = "" Then GoTo Finished
@@ -117,12 +117,12 @@ Function Chars_Are_In(first_string, second_string) As Boolean
                                                                                                                         ' wasnt found in the second string so break out
 Next_First:
     Next f
-    Result = True                                                                                                       ' If we reach point no missing matches were found
+    result = True                                                                                                       ' If we reach point no missing matches were found
                                                                                                                         ' and we can change the result to TRUE
 NotFound:
     
     ' >>>> Finish up <<<<
 Finished:
-    Chars_Are_In = Result                                                                                               ' Pass the results back
+    Chars_Are_In = result                                                                                               ' Pass the results back
 
 End Function

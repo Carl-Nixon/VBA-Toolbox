@@ -66,6 +66,7 @@ NotFound:
     End If
     
     ' >>>> Return the value found/calculated <<<<
+    If dialog_return = "\" Then dialog_return = ""                                                                      ' Make sure empty returns are really empty
     Browse_For_Folder = dialog_return                                                                                   ' Return the result
     Set file_dialog = Nothing                                                                                           ' Clear up the memory
 
@@ -200,9 +201,3 @@ Finished:
     File_Exist = result                                                                                                 ' Pass back results
     
 End Function
-
-
-
-
-
-
