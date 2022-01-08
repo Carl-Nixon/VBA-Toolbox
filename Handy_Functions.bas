@@ -1,128 +1,159 @@
 Attribute VB_Name = "Handy_Functions"
+' Contents
+'   Working With Columns
+'       ColLetToNum            - Converts column letters in to their equivalent number
+'       ColNumToLet            - Converts a column number in to its equivalent letter(s)
+'   Working With Strings
+'       CharsOnlyIn            - Checks all the characters in a string is in a second string
 '
-' -- Contents --
-'
-'    -- Working With Columns --
-'        Col_Let_To_Num     - Converts column letters in to their equivalent number
-'        Col_Num_To_Let     - Converts a column number in to its equivalent letter(s)
-'
-'    -- Working With Strings --
-'        Chars_Are_In       - Checks all the characters in a string is in a second string
-'
-'
-'
-'
-Function Col_Let_To_Num(col_let As String) As Double
+Function ColLetToNum(col_let As String) As Integer
     
-    ' +-------------------------------------------------------------------------------------------+
-    ' | -- Purpose --                                                                             |
-    ' |    Converts a column letter to its equivalent number                                      |
-    ' |                                                                                           |
-    ' | -- Arguments --                                                                           |
-    ' |    col_let       - The letter(s) to be converted into a number. Input as a string         |
-    ' |                                                                                           |
-    ' | -- Returned Value --                                                                      |
-    ' |                  - Returns the column number if found                                     |
-    ' |                  - Returns 0 if the number isnt found (as an error capture)               |
-    ' |                                                                                           |
-    ' | -- Requirements --                                                                        |
-    ' |                  - Needs the Chars_Are_In function available in order to work             |
-    ' +-------------------------------------------------------------------------------------------+
+    ' Purpose -->   Converts a column letter to its equivalent number
+    ' Arguments --> col_let (string)
+    '               - The letter(s) to be converted into a number
+    ' Returns -->   (Integer)
+    '               - Returns the column number if found
+    '               - Returns 0 if the number isn't found (as an error capture)
     
-    ' >>>> Set up variables <<<<
-    Dim column_number As Double                                                                                         ' Holds the calculated column number
+    ' Set up variables
+    ' ================
     
-    column_number = 0                                                                                                   ' Set to 0 as a default
-    col_let = Trim(UCase(col_let))                                                                                      ' Convert passed string to upper case and trim
+    ' Holds the calculated column number
+    Dim column_number As Integer
     
-    ' >>>> Check safe to run <<<<
-    If col_let = "" Then GoTo Finished                                                                                  ' If there is no string to work on then finish
-    If Not Chars_Are_In(col_let, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") Then GoTo Finished                                       ' Check there are no invalid characters
+    ' Set to 0 as a default
+    column_number = 0
     
-    ' >>>> Convert the letter(s) to a number <<<<
-    column_number = Range(col_let & "1").Column                                                                         ' Find the column number
+    ' Convert passed string to upper case and trim it to make it safer
+    col_let = Trim(UCase(col_let))
     
-    ' >>>> Finish up <<<<
+    ' Check it is safe to run
+    ' =======================
+    
+    ' If there is no string to work on then finish
+    If col_let = "" Then GoTo Finished
+
+    ' Convert the letter(s) to a number
+    ' =================================
+    
+    ' Build a range using the column letter then split it
+    ' back out so the column number can be extracted
+    column_number = Range(col_let & "1").Column
+    
+    ' Finish up
+    ' =========
 Finished:
-    Col_Let_To_Num = column_number                                                                                      ' Set the resulted to the calculated figure
+
+    ' Return the calculated column number
+    ColLetToNum = column_number
 
 End Function
 
-Function Col_Num_To_Let(col_num As Double) As String
+Function ColNumToLet(col_num As Integer) As String
     
-    ' +-------------------------------------------------------------------------------------------+
-    ' | -- Purpose --                                                                             |
-    ' |    Converts a column number to its equivalent letter                                      |
-    ' |                                                                                           |
-    ' | -- Arguments --                                                                           |
-    ' |    col_num       - The number to be converted into a column letter(s). Input as a double  |
-    ' |                                                                                           |
-    ' | -- Returned Value --                                                                      |
-    ' |                  - Returns a string containing the leter(s) if found                      |
-    ' |                  - Returns an empty string if there is any kind of error                  |
-    ' +-------------------------------------------------------------------------------------------+
+    ' Purpose -->   Converts a column number to its equivalent letter
+    ' Arguments --> col_num(integer)
+    '               - The number to be converted into a column letter(s).
+    ' Returns -->   (String)
+    '               - Returns a string containing the letter(s) if found
+    '               - Returns an empty string if there is any kind of error
 
-    ' >>>> Set up variables <<<<
-    Dim column_letter As String                                                                                         ' Holds the calculated letter(s)
+    ' Set up variables
+    ' ================
     
-    column_letter = ""                                                                                                  ' Default the calculated letter(s) to a blank string
-
-    ' >>>> Check safe to run <<<<
-    If col_num < 0 Or col_num > 16384 Then GoTo Finished                                                                ' Number is outside the permited number of columns so exit
-    If Int(col_num) <> col_num Then GoTo Finished                                                                       ' Column number is not a whole number so exit
-
-    ' >>>> Convert number to letter(s) <<<<
-    column_letter = Split(Cells(1, col_num).Address, "$")(1)                                                            ' Find the column letters
+    ' Holds the calculated letter(s)
+    Dim column_letter As String
     
-    ' >>>> Finish up <<<<
+    ' Default the calculated letter(s) to a blank string
+    column_letter = ""
+
+    ' Check safe to run
+    ' =================
+    
+    ' If number is outside the permitted number of columns then exit
+    If col_num < 0 Or col_num > 16384 Then GoTo Finished
+    
+    ' If column number is not a whole number then exit
+    If Int(col_num) <> col_num Then GoTo Finished
+
+    ' Convert number to letter(s)
+    ' ===========================
+    
+    ' Build a range using the column number then split it
+    ' back out so the column letter can be extracted
+    column_letter = Split(Cells(1, col_num).Address, "$")(1)
+    
+    ' Finish up
+    ' =========
 Finished:
-    Col_Num_To_Let = column_letter
+
+    ' Return the calculated column letter
+    ColNumToLet = column_letter
 
 End Function
 
-Function Chars_Are_In(first_string, second_string) As Boolean
+Function CharsOnlyIn(first_str, second_str) As Boolean
 
-    ' +-------------------------------------------------------------------------------------------+
-    ' | -- Purpose --                                                                             |
-    ' |    Checks all the characters used in the first string are in the second string.           |
-    ' |    This is to ensure only valid characters are used. Returns TRUE if valid, FALSE if not. |
-    ' |    Process is case sensitive                                                              |
-    ' |                                                                                           |
-    ' | -- Arguments --                                                                           |
-    ' |    first_string  - Contains the string of characters to be checked                        |
-    ' |    second_string - Contains the string of characters allowed                              |
-    ' |                                                                                           |
-    ' | -- Returned Value --                                                                      |
-    ' |                  - Returns FALSE by default (including for errors)                        |
-    ' |                  - Returns TRUE if all the characters in the first string are found in    |
-    ' |                    in the second string. (Is case sensitive)                              |
-    ' +-------------------------------------------------------------------------------------------+
+    ' Purpose -->   Checks all the characters used in the first string are in the
+    '               second string. This is to ensure only valid characters are used.
+    '               Returns TRUE if valid, FALSE if not. Process is case sensitive
+    ' Arguments --> first_str (string)
+    '               - Contains the string of characters to be checked
+    '                 second_str (string)
+    '               - Contains the string of characters allowed
+    ' Returns -->   (Boolean)
+    '               - Returns FALSE by default (including for errors)
+    '               - Returns TRUE if all the characters in the first string are
+    '                 found in the second string.
     
-    ' >>>> Set up variables <<<<
-    Dim result As Boolean                                                                                               ' Holds if the values are valid or not
+    ' Set up variables
+    ' ================
     
-    result = False                                                                                                      ' Set result to FALSE as a default
+    ' Holds the calculated result to be returned at the end
+    Dim result As Boolean
     
-    ' >>>> Check safe to run <<<<
-    If first_string = "" Or second_string = "" Then GoTo Finished
+    ' Default the result to false
+    result = False
+    
+    ' Check its safe to proceed
+    ' =========================
+    
+    ' If either string is empty then jump to finish as a result cant be calculated
+    If first_str = "" Or second_str = "" Then GoTo Finished
 
-    ' >>>> Check the strings <<<<
-    For f = 1 To Len(first_string)                                                                                      ' Iterate over first string characters
-        For s = 1 To Len(second_string)                                                                                 ' Iterate over second string characters
-            If Mid(first_string, f, 1) = Mid(second_string, s, 1) Then GoTo Next_First                                  ' If the f char in the first string matches
-                                                                                                                        ' char s of the second string move to the next
-                                                                                                                        ' char in the first string
+    ' Check the strings
+    ' =================
+    
+    ' Iterate over first string characters
+    For f = 1 To Len(first_str)
+        
+        ' Iterate over second string characters
+        For s = 1 To Len(second_str)
+            
+            ' If the f char in the first string matches chars of the
+            ' second string move to the next char in the first string
+            If Mid(first_str, f, 1) = Mid(second_str, s, 1) Then GoTo Next_First
+                                                                                        
         Next s
-        GoTo NotFound                                                                                                   ' If we reach this point char f of the first string
-                                                                                                                        ' wasnt found in the second string so break out
+        
+        ' If we reach this point char f of the first string
+        ' wasn't found in the second string so break out
+        GoTo NotFound
+        
 Next_First:
     Next f
-    result = True                                                                                                       ' If we reach point no missing matches were found
-                                                                                                                        ' and we can change the result to TRUE
+    
+    ' If we reach point no missing matches were found
+    ' and we can change the result to TRUE
+    result = True
+    
 NotFound:
     
-    ' >>>> Finish up <<<<
+    ' Finish up
+    ' =========
 Finished:
-    Chars_Are_In = result                                                                                               ' Pass the results back
+
+    ' Pass the result back
+    CharsOnlyIn = result
 
 End Function
